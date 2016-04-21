@@ -8,6 +8,7 @@ import tornado.web
 
 from secret_contacts import router
 
+import motor
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -18,14 +19,17 @@ class Application(tornado.web.Application):
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=False,
             cookie_secret="567bcc7f346c8ce22e1893cee0f43a3a",
+            salt_length=16,
             # login_url="/customer/login",
             debug=True)
         super(Application, self).__init__(handlers, **settings)
 
+        self.db = motor.motor_tornado.MotorClient("mongodb://localhost:27017").secret_contacts
+
 
 def main():
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(8000)
+    http_server.listen(8080)
     tornado.ioloop.IOLoop.current().start()
 
 
