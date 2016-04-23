@@ -3,7 +3,10 @@ import tornado.gen as gen
 from json import loads, dumps
 from http import HTTPStatus
 import os
+import time
 import hashlib
+import uuid
+
 
 class BaseHandler(RequestHandler):
     def prepare(self):
@@ -16,4 +19,7 @@ class BaseHandler(RequestHandler):
     def hash_passwd_with_salt(self, passwd):
         salt = os.urandom(self.settings["salt_length"])
         hashed_passwd = hashlib.sha512(salt+passwd.encode()).hexdigest()
-        return salt,hashed_passwd
+        return salt, hashed_passwd
+
+    def get_auth_key(self):
+        return str(uuid.uuid4())

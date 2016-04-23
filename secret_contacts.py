@@ -10,6 +10,7 @@ from secret_contacts import router
 
 import motor
 
+
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = router
