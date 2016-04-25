@@ -14,7 +14,7 @@ class LoginHandler(BaseHandler):
                 success = True
 
         if success:
-            print(json["email"] + " login success." + doc["_id"])
+            print(json["email"] + " login success." + str(doc["_id"]))
 
             auth_key = self.get_auth_key()
             doc["auth_key"] = auth_key
