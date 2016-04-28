@@ -3,7 +3,7 @@ from secret_contacts.base_handler import *
 
 class LoginHandler(BaseHandler):
     @gen.coroutine
-    def post(self):
+    def post(self, *args, **kwargs):
         json = loads(self.request.body.decode())
 
         doc = yield self.db.users.find_one({"email": json["email"]})
@@ -15,10 +15,6 @@ class LoginHandler(BaseHandler):
 
         if success:
             print(json["email"] + " login success." + str(doc["_id"]))
-
-            auth_key = self.get_auth_key()
-            doc["auth_key"] = auth_key
-            yield self.db.users.save(doc)
 
             self.set_status(HTTPStatus.OK.value)
             self.write(dumps(
