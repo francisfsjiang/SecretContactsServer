@@ -22,13 +22,22 @@ class BaseHandler(RequestHandler):
         hashed_passwd = hashlib.sha512(salt+passwd.encode()).hexdigest()
         return salt, hashed_passwd
 
-    def get_uuid(self):
+    def generate_uuid(self):
         return str(uuid.uuid4())
+
+    def generate_recovery_key(self):
+        return str(uuid.uuid4())[0:18]
 
     def generate_rsa_key_pair(self, bits):
         key = crypto.PKey()
         key.generate_key(crypto.TYPE_RSA, bits)
-        public_key = str(crypto.dump_publickey(crypto.FILETYPE_PEM, key))
-        private_key = str(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
+        public_key = crypto.dump_publickey(crypto.FILETYPE_PEM, key).decode()
+        private_key = crypto.dump_privatekey(crypto.FILETYPE_PEM, key).decode()
+        public_key = public_key.replace("-----BEGIN PUBLIC KEY-----", "")
+        public_key = public_key.replace("-----END PUBLIC KEY-----", "")
+        public_key = public_key.replace("\n", "")
+        private_key = private_key.replace("-----BEGIN PRIVATE KEY-----", "")
+        private_key = private_key.replace("-----END PRIVATE KEY-----", "")
+        private_key = private_key.replace("\n", "")
         return public_key, private_key
 

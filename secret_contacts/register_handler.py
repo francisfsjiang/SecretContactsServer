@@ -9,7 +9,7 @@ class RegisterHandler(BaseHandler):
         success = False
 
         salt, hashed_passwd = self.hash_passwd_with_salt(json["passwd"])
-        auth_key = self.get_uuid()
+        auth_key = self.generate_uuid()
         doc = {
             "email": json["email"],
             "passwd": hashed_passwd,
