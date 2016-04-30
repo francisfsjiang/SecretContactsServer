@@ -1,6 +1,5 @@
 from secret_contacts.base_handler import *
 
-from bson.objectid import ObjectId
 
 class KeyHandler(BaseHandler):
 
@@ -9,7 +8,8 @@ class KeyHandler(BaseHandler):
         json = loads(self.request.body.decode())
 
         res = yield self.db.users.find_one({"_id": ObjectId(json["auth_id"])})
-        if json["auth_key"] != res["auth_key"]:
+
+        if res is None or json["auth_key"] != res["auth_key"]:
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
         if json["recover"] and res["have_keys"]:
