@@ -9,6 +9,7 @@ import hashlib
 import uuid
 from bson.objectid import ObjectId
 
+
 class BaseHandler(RequestHandler):
     def prepare(self):
         self.db = self.application.db

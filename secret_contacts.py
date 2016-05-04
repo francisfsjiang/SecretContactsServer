@@ -7,6 +7,7 @@ import tornado.options
 import tornado.web
 
 from secret_contacts import router
+from secret_contacts.schedule_task import TaskThread
 
 import motor
 
@@ -29,6 +30,8 @@ class Application(tornado.web.Application):
 
 
 def main():
+    tt = TaskThread()
+    tt.start()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(8080)
     tornado.ioloop.IOLoop.current().start()
