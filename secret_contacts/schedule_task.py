@@ -11,7 +11,7 @@ class TaskThread(threading.Thread):
 
         while True:
             try:
-                time.sleep(60)
+                time.sleep(10)
                 print("schedule task start")
                 content_arr = []
                 for doc in db.harassing_phone.find():
