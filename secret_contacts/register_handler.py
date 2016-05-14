@@ -31,7 +31,7 @@ class RegisterHandler(BaseHandler):
             self.set_status(HTTPStatus.OK.value)
             self.write(dumps(
                 {
-                    "auth_id": str(doc["auth_id"]),
+                    "auth_id": str(doc["_id"]),
                     "auth_key": doc["auth_key"],
                 }
             ))

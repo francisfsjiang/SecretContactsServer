@@ -1,6 +1,7 @@
 import threading
 import time
 import pymongo
+import pymongo.errors
 
 from json import dumps
 
@@ -25,6 +26,7 @@ class TaskThread(threading.Thread):
                 }
                 db.harassing_cache.save(json)
                 print(json)
-
+            except pymongo.errors.DuplicateKeyError as e:
+                print("schedule idle")
             except Exception as e:
                 print("schedule task failed")

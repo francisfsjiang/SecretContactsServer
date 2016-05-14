@@ -9,20 +9,24 @@ class KeyHandler(BaseHandler):
 
         res = yield self.db.users.find_one({"_id": ObjectId(json["auth_id"])})
 
-        if res is None or json["auth_key"] != res["auth_key"]:
+        if res is None or \
+                        json["auth_key"] != res["auth_key"] or \
+                        not self.check_passwd(res["salt"], json["passwd"], res["passwd"]):
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
+
         if json["recover"] and res["have_keys"]:
             pri_key_doc = yield self.db.private_keys.find_one({"recovery_key": json["recovery_key"]})
             if pri_key_doc is not None:
                 self.set_status(HTTPStatus.OK.value)
                 self.write(dumps({
-                    "pri_key": pri_key_doc["pri_key"],
+                    "pri_key": self.decrypt_pri_key(pri_key_doc["pri_key"], json["passwd"]),
                     "pub_key": res["pub_key"],
                     "recovery_key": pri_key_doc["recovery_key"]
                 }))
             else:
                 self.set_status(HTTPStatus.BAD_REQUEST.value)
+
         elif not json["recover"] and res is not None and not res["have_keys"]:
             pub_key, pri_key = self.generate_rsa_key_pair(2048)
             recovery_key = self.generate_recovery_key()
@@ -30,7 +34,7 @@ class KeyHandler(BaseHandler):
             users_res = yield self.db.users.save(res)
             key_res = yield self.db.private_keys.save({
                 "recovery_key": recovery_key,
-                "pri_key": pri_key
+                "pri_key": self.encrypt_pri_key(pri_key, json["passwd"])
             })
             if users_res is not None and key_res is not None:
                 res["have_keys"] = True
