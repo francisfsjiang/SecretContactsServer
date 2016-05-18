@@ -14,7 +14,6 @@ class TaskThread(threading.Thread):
         while True:
             try:
                 time.sleep(10)
-                print("schedule task start")
                 content_arr = []
                 for doc in db.harassing_phone.find():
                     content_arr.append(
@@ -28,8 +27,7 @@ class TaskThread(threading.Thread):
                     "md5": md5
                 }
                 db.harassing_cache.save(json)
-                print(json)
             except pymongo.errors.DuplicateKeyError as e:
-                print("schedule idle")
+                pass
             except Exception as e:
                 print("schedule task failed")

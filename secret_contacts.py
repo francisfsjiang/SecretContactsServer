@@ -11,6 +11,8 @@ from secret_contacts.schedule_task import TaskThread
 
 import motor
 
+import sys
+
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -23,19 +25,20 @@ class Application(tornado.web.Application):
             cookie_secret="567bcc7f346c8ce22e1893cee0f43a3a",
             salt_length=16,
             # login_url="/customer/login",
-            debug=True)
+            debug=False)
         super(Application, self).__init__(handlers, **settings)
 
         self.db = motor.motor_tornado.MotorClient("mongodb://localhost:27017").secret_contacts
 
 
-def main():
-    tt = TaskThread()
-    tt.start()
+def main(port):
+    # tt = TaskThread()
+    # tt.start()
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(8080)
+    http_server.listen(port)
     tornado.ioloop.IOLoop.current().start()
 
 
 if __name__ == "__main__":
-    main()
+    port = int(sys.argv[1])
+    main(port)

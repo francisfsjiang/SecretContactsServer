@@ -13,7 +13,7 @@ class ContactsHandler(BaseHandler):
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
 
-        pprint.pprint(json)
+        # pprint.pprint(json)
 
         if json["action"] == "pull":
             doc = yield self.db.contacts.find_one({"id": json["id"], "user_id": json["auth_id"]})
