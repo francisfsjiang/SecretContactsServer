@@ -12,6 +12,7 @@ class PollingHandler(BaseHandler):
         if user is None or json["auth_key"] != user["auth_key"]:
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
+            return
 
         cursor = self.db.contacts.find({"user_id": json["auth_id"]})
         resp_json = {

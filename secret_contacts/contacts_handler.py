@@ -12,6 +12,7 @@ class ContactsHandler(BaseHandler):
         if user is None or json["auth_key"] != user["auth_key"]:
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
+            return
 
         # pprint.pprint(json)
 

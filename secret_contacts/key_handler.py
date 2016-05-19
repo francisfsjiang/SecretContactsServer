@@ -14,6 +14,7 @@ class KeyHandler(BaseHandler):
                         not self.check_passwd(res["salt"], json["passwd"], res["passwd"]):
             self.set_status(HTTPStatus.FORBIDDEN.value)
             self.finish()
+            return
 
         if json["recover"] and res["have_keys"]:
             pri_key_doc = yield self.db.private_keys.find_one({"recovery_key": json["recovery_key"]})
