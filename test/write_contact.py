@@ -1,4 +1,6 @@
 import time
+import pymongo
+
 from datetime import timedelta
 from tornado import httpclient, gen, ioloop, queues
 from json import dumps
@@ -75,3 +77,5 @@ def main():
 if __name__ == '__main__':
     io_loop = ioloop.IOLoop.current()
     io_loop.run_sync(main)
+    db = pymongo.MongoClient("mongodb://localhost:27017").secret_contacts
+    db.contacts.remove({"last_op_time": 0})

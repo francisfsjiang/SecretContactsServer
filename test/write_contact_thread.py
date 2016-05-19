@@ -1,13 +1,14 @@
 import time
 import requests
+import pymongo
 
 from threading import Lock
 from threading import Thread
 
 from json import dumps
 
-concurrency = 1000
-times = 2000
+concurrency = 300
+times = 3000
 
 lock = Lock()
 global_time = 0
@@ -41,11 +42,11 @@ def loop(t, start_id):
 
 if __name__ == '__main__':
     threads = []
-    start = time.time()
     for i in range(concurrency):
         t = Thread(target=loop, args=(int(times/concurrency), int(times/concurrency)*i))
         threads.append(t)
 
+    start = time.time()
     for t in threads:
         t.start()
 
@@ -54,3 +55,8 @@ if __name__ == '__main__':
 
     print('Done in %f seconds.' % (time.time() - start))
     print('Average %f seconds.' % ((time.time() - start) / times))
+
+    db = pymongo.MongoClient("mongodb://localhost:27017").secret_contacts
+    db.contacts.remove({"last_op_time": 0})
+
+

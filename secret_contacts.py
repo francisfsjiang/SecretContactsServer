@@ -32,8 +32,8 @@ class Application(tornado.web.Application):
 
 
 def main(port):
-    # tt = TaskThread()
-    # tt.start()
+    tt = TaskThread()
+    tt.start()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(port)
     tornado.ioloop.IOLoop.current().start()

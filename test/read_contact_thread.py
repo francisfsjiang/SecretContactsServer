@@ -6,8 +6,8 @@ from threading import Thread
 
 from json import dumps
 
-concurrency = 1000
-times = 4000
+concurrency = 300
+times = 3000
 
 lock = Lock()
 global_time = 0
